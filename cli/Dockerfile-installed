@@ -55,6 +55,6 @@ COPY --from=sabre-cli-builder /project/cli/target/debian/sabre-cli*.deb /tmp
 
 RUN apt-get update \
  && dpkg -i /tmp/sabre-cli_*.deb || true \
- && apt-get -f -y install
+ && apt-get -f -y install && apt-get upgrade -y 
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
