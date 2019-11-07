@@ -626,7 +626,7 @@ pub enum WasmSdkError {
 impl std::fmt::Display for WasmSdkError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
-            WasmSdkError::InvalidTransaction(ref s) => write!(f, "InvalidTransactio: {}", s),
+            WasmSdkError::InvalidTransaction(ref s) => write!(f, "InvalidTransaction: {}", s),
             WasmSdkError::InternalError(ref s) => write!(f, "InternalError: {}", s),
             WasmSdkError::StateSetError(ref s) => write!(f, "StateSetError: {}", s),
             WasmSdkError::AllocError(ref s) => write!(f, "AllocError: {}", s),
