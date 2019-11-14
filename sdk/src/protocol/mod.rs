@@ -14,6 +14,8 @@
 
 pub mod payload;
 pub mod pike;
+#[cfg(feature = "simple-state")]
+pub mod simple_state;
 pub mod state;
 
 pub const ADMINISTRATORS_SETTING_ADDRESS: &str =

@@ -31,3 +31,10 @@ protobuf = "2"
 [build-dependencies]
 protoc-rust = "2"
 glob = "0.2"
+
+[features]
+default = []
+
+experimental = ["simple-state"]
+
+simple-state = []
