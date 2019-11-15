@@ -12,5 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod addresser;
-pub mod error;
+use crate::simple_state::error::SimpleStateError;
+
+pub const ADDRESS_LENGTH: usize = 70;
+
+pub trait Addresser<K> {
+    /// Returns a radix address calculated from the given keys
+    ///
+    /// # Arguments
+    ///
+    /// * `keys` - Contains natural keys used to calculate an address
+    ///
+    fn compute(&self, keys: &K) -> Result<String, SimpleStateError>;
+
+    /// Returns a human readable string of the given keys
+    ///
+    /// # Arguments
+    ///
+    /// * `keys` - Contains natural keys
+    ///
+    fn normalize(&self, keys: &K) -> String;
+}
