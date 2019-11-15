@@ -64,3 +64,37 @@ impl Addresser<String> for KeyHashAddresser {
         key.to_string()
     }
 }
+
+pub struct DoubleKeyHashAddresser {
+    prefix: String,
+    first_hash_length: usize,
+}
+
+impl DoubleKeyHashAddresser {
+    pub fn new(prefix: String, first_hash_length: Option<usize>) -> DoubleKeyHashAddresser {
+        DoubleKeyHashAddresser {
+            prefix: prefix.clone(),
+            first_hash_length: first_hash_length.unwrap_or((ADDRESS_LENGTH - prefix.len()) / 2),
+        }
+    }
+}
+
+impl Addresser<(String, String)> for DoubleKeyHashAddresser {
+    fn compute(&self, keys: &(String, String)) -> Result<String, SimpleStateError> {
+        let hash_length = ADDRESS_LENGTH - self.prefix.len();
+        let second_hash_length = hash_length - self.first_hash_length;
+        if (self.prefix.len() + self.first_hash_length + second_hash_length) != ADDRESS_LENGTH {
+            return Err(SimpleStateError::AddresserError(
+                "Incorrect hash length".to_string(),
+            ));
+        }
+        let first_hash = &hash(self.first_hash_length, &keys.0);
+        let second_hash = &hash(second_hash_length, &keys.1);
+
+        Ok(String::from(&self.prefix) + first_hash + second_hash)
+    }
+
+    fn normalize(&self, keys: &(String, String)) -> String {
+        keys.0.to_string() + "_" + &keys.1
+    }
+}
