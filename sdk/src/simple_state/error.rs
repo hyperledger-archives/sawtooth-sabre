@@ -14,12 +14,16 @@
 
 use std::error::Error as StdError;
 
+use crate::WasmSdkError;
+
 use crate::protos::ProtoConversionError;
 
 #[derive(Debug)]
 pub enum SimpleStateError {
     AddresserError(String),
     ProtoConversionError(ProtoConversionError),
+    ProtocolBuildError(Box<dyn StdError>),
+    SdkError(WasmSdkError),
 }
 
 impl std::fmt::Display for SimpleStateError {
@@ -29,6 +33,10 @@ impl std::fmt::Display for SimpleStateError {
             SimpleStateError::ProtoConversionError(ref err) => {
                 write!(f, "ProtoConversionError: {}", err.description())
             }
+            SimpleStateError::ProtocolBuildError(ref err) => {
+                write!(f, "ProtocolBuildError: {}", err.description())
+            }
+            SimpleStateError::SdkError(ref err) => write!(f, "WasmSdkError: {}", err.to_string()),
         }
     }
 }
@@ -36,5 +44,11 @@ impl std::fmt::Display for SimpleStateError {
 impl From<ProtoConversionError> for SimpleStateError {
     fn from(e: ProtoConversionError) -> Self {
         SimpleStateError::ProtoConversionError(e)
+    }
+}
+
+impl From<WasmSdkError> for SimpleStateError {
+    fn from(e: WasmSdkError) -> Self {
+        SimpleStateError::SdkError(e)
     }
 }
