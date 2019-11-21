@@ -18,6 +18,8 @@ mod externs;
 pub mod log;
 pub mod protocol;
 pub mod protos;
+#[cfg(feature = "simple-state")]
+pub mod simple_state;
 
 use std::collections::HashMap;
 use std::error::Error;
