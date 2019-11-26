@@ -26,7 +26,7 @@ mod tests {
     use crate::protocol::simple_state::ValueType;
     use crate::{TransactionContext, WasmSdkError};
 
-    use addresser::KeyHashAddresser;
+    use addresser::{DoubleKeyHashAddresser, KeyHashAddresser};
     use context::KeyValueTransactionContext;
     use error::SimpleStateError;
 
@@ -299,5 +299,155 @@ mod tests {
             .delete_state_entries(["a".to_string(), "b".to_string()].to_vec())
             .unwrap();
         assert!(already_deleted.is_empty());
+    }
+
+    #[test]
+    // Check that the KeyValueTransactionContext set_state_entry method successfully sets
+    // the correct state entry. Uses the DoubleKeyHashAddresser implementation.
+    fn test_double_set_state_entry() {
+        let mut context = TestContext::new();
+        let addresser = DoubleKeyHashAddresser::new("prefix".to_string(), None);
+        let simple_state = KeyValueTransactionContext::new(&mut context, addresser);
+
+        let value = ValueType::Int64(64);
+        let mut state_value = HashMap::new();
+        state_value.insert("key1".to_string(), value);
+
+        assert!(simple_state
+            .set_state_entry(&("a".to_string(), "b".to_string()), state_value)
+            .is_ok());
+    }
+
+    #[test]
+    // Check that the KeyValueTransactionContext get_state_entry method successfully gets
+    // the correct state entry. Uses the DoubleKeyHashAddresser implementation.
+    fn test_double_get_state_entry() {
+        let mut context = TestContext::new();
+        let addresser = DoubleKeyHashAddresser::new("prefix".to_string(), None);
+        let simple_state = KeyValueTransactionContext::new(&mut context, addresser);
+
+        let value = ValueType::Int64(64);
+        let mut state_value = HashMap::new();
+        state_value.insert("key1".to_string(), value);
+        simple_state
+            .set_state_entry(&("a".to_string(), "b".to_string()), state_value)
+            .expect("Unable to set state entry in get_state_entry test");
+
+        let values = simple_state
+            .get_state_entry(&("a".to_string(), "b".to_string()))
+            .unwrap();
+        assert!(values.is_some());
+        assert_eq!(
+            values.unwrap().get(&"key1".to_string()),
+            Some(&ValueType::Int64(64))
+        );
+    }
+
+    #[test]
+    // Check that the KeyValueTransactionContext delete_state_entry method successfully deletes
+    // the state entry. Uses the DoubleKeyHashAddresser implementation.
+    fn test_double_delete_state_entry() {
+        let mut context = TestContext::new();
+        let addresser = DoubleKeyHashAddresser::new("prefix".to_string(), None);
+        let simple_state = KeyValueTransactionContext::new(&mut context, addresser);
+
+        let value = ValueType::Int64(64);
+        let mut state_value = HashMap::new();
+        state_value.insert("key1".to_string(), value);
+        simple_state
+            .set_state_entry(&("a".to_string(), "b".to_string()), state_value)
+            .expect("Unable to set state entry in get_state_entry test");
+        simple_state
+            .get_state_entry(&("a".to_string(), "b".to_string()))
+            .expect("Unable to get state entry in delete_state_entries test");
+
+        let deleted = simple_state
+            .delete_state_entry(("a".to_string(), "b".to_string()))
+            .unwrap();
+        assert!(deleted.is_some());
+        assert_eq!(deleted, Some(format!("{}_{}", "a", "b")));
+    }
+
+    #[test]
+    // Check that the KeyValueTransactionContext set_state_entries method successfully sets
+    // the state entries. Uses the DoubleKeyHashAddresser implementation.
+    fn test_double_set_state_entries() {
+        let mut context = TestContext::new();
+        let addresser = DoubleKeyHashAddresser::new("prefix".to_string(), None);
+        let simple_state = KeyValueTransactionContext::new(&mut context, addresser);
+
+        let mut entries = HashMap::new();
+        let first_key = &("a".to_string(), "b".to_string());
+        let first_value_map = create_entry_value_map("key1".to_string(), ValueType::Int32(32));
+        let second_key = &("c".to_string(), "d".to_string());
+        let second_value_map =
+            create_entry_value_map("key1".to_string(), ValueType::String("String".to_string()));
+        entries.insert(first_key, first_value_map);
+        entries.insert(second_key, second_value_map);
+
+        assert!(simple_state.set_state_entries(entries).is_ok());
+    }
+
+    #[test]
+    // Check that the KeyValueTransactionContext get_state_entries method successfully gets
+    // the state entries. Uses the DoubleKeyHashAddresser implementation.
+    fn test_double_get_state_entries() {
+        let mut context = TestContext::new();
+        let addresser = DoubleKeyHashAddresser::new("prefix".to_string(), None);
+        let simple_state = KeyValueTransactionContext::new(&mut context, addresser);
+
+        let mut entries = HashMap::new();
+        let first_key = &("a".to_string(), "b".to_string());
+        let first_value_map = create_entry_value_map("key1".to_string(), ValueType::Int32(32));
+        let second_key = &("c".to_string(), "d".to_string());
+        let second_value_map =
+            create_entry_value_map("key1".to_string(), ValueType::String("String".to_string()));
+        entries.insert(first_key, first_value_map.clone());
+        entries.insert(second_key, second_value_map.clone());
+        simple_state
+            .set_state_entries(entries)
+            .expect("Unable to set_state_entries in get_state_entries test");
+
+        let values = simple_state
+            .get_state_entries([first_key, second_key].to_vec())
+            .expect("Unable to get state entries in get_state_entries test");
+        assert_eq!(
+            values.get(&format!("{}_{}", "a", "b")).unwrap(),
+            &first_value_map
+        );
+        assert_eq!(
+            values.get(&format!("{}_{}", "c", "d")).unwrap(),
+            &second_value_map
+        );
+    }
+
+    #[test]
+    // Check that the KeyValueTransactionContext delete_state_entries method successfully deletes
+    // the state entries. Uses the DoubleKeyHashAddresser implementation.
+    fn test_double_delete_state_entries() {
+        let mut context = TestContext::new();
+        let addresser = DoubleKeyHashAddresser::new("prefix".to_string(), None);
+        let simple_state = KeyValueTransactionContext::new(&mut context, addresser);
+
+        let mut entries = HashMap::new();
+        let first_key = ("a".to_string(), "b".to_string());
+        let first_value_map = create_entry_value_map("key1".to_string(), ValueType::Int32(32));
+        let second_key = ("c".to_string(), "d".to_string());
+        let second_value_map =
+            create_entry_value_map("key1".to_string(), ValueType::String("String".to_string()));
+        entries.insert(&first_key, first_value_map.clone());
+        entries.insert(&second_key, second_value_map.clone());
+        simple_state
+            .set_state_entries(entries)
+            .expect("Unable to set_state_entries in delete_state_entries test");
+        simple_state
+            .get_state_entries([&first_key, &second_key].to_vec())
+            .expect("Unable to get_state_entries in the delete_state_entries test");
+
+        let deleted = simple_state
+            .delete_state_entries([first_key, second_key].to_vec())
+            .expect("Unable to delete state entries");
+        assert!(deleted.contains(&format!("{}_{}", "a", "b")));
+        assert!(deleted.contains(&format!("{}_{}", "c", "d")));
     }
 }
