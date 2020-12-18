@@ -19,7 +19,6 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-use dirs;
 use sawtooth_sdk::signing::{
     create_context, secp256k1::Secp256k1PrivateKey, transact::TransactSigner, Signer,
 };
@@ -73,11 +72,11 @@ fn load_signing_key(name: Option<&str>) -> Result<Secp256k1PrivateKey, CliError>
                 "Could not load signing key: unable to determine home directory",
             ))
         })
-        .and_then(|mut p| {
+        .map(|mut p| {
             p.push(".sawtooth");
             p.push("keys");
             p.push(format!("{}.priv", &username));
-            Ok(p)
+            p
         })?;
 
     if !private_key_filename.as_path().exists() {
