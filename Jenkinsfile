@@ -18,13 +18,13 @@
 pipeline {
     agent {
         node {
-            label 'master'
+            label '0-7'
             customWorkspace "workspace/${env.BUILD_TAG}"
         }
     }
 
     triggers {
-        cron(env.BRANCH_NAME == 'master' ? 'H 3 * * *' : '')
+        cron(env.BRANCH_NAME == '0-7' ? 'H 3 * * *' : '')
     }
 
     options {
@@ -45,7 +45,7 @@ pipeline {
             }
             when {
                 not {
-                    branch 'master'
+                    branch '0-7'
                 }
             }
         }
