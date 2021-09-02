@@ -184,7 +184,7 @@ fn upload(upload_matches: &clap::ArgMatches) -> Result<(String, u64), CliError> 
         },
     };
 
-    let batch_link = upload::do_upload(&filename, key_name, &url, wasm_name)?;
+    let batch_link = upload::do_upload(filename, key_name, url, wasm_name)?;
     Ok((batch_link, wait))
 }
 
@@ -241,7 +241,7 @@ fn execute(exec_matches: &clap::ArgMatches) -> Result<(String, u64), CliError> {
         .into_batch_builder(&*signer)?
         .build(&*signer)?;
 
-    let batch_link = submit_batches(&url, vec![batch])?;
+    let batch_link = submit_batches(url, vec![batch])?;
 
     Ok((batch_link, wait))
 }
@@ -282,7 +282,7 @@ fn namespace_registry(ns_matches: &clap::ArgMatches) -> Result<(String, u64), Cl
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     } else if ns_matches.is_present("delete") {
         if ns_matches.is_present("owner") {
             return Err(CliError::UserError(
@@ -297,7 +297,7 @@ fn namespace_registry(ns_matches: &clap::ArgMatches) -> Result<(String, u64), Cl
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     } else {
         let owners = owners.ok_or_else(|| {
             CliError::UserError("create action requires one or more --owner arguments".into())
@@ -311,7 +311,7 @@ fn namespace_registry(ns_matches: &clap::ArgMatches) -> Result<(String, u64), Cl
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     };
 
     Ok((batch_link, wait))
@@ -343,7 +343,7 @@ fn namespace_permission(perm_matches: &clap::ArgMatches) -> Result<(String, u64)
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     } else {
         let read = perm_matches.is_present("read");
         let write = perm_matches.is_present("write");
@@ -362,7 +362,7 @@ fn namespace_permission(perm_matches: &clap::ArgMatches) -> Result<(String, u64)
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     };
 
     Ok((batch_link, wait))
@@ -398,7 +398,7 @@ fn contract_registry(cr_matches: &clap::ArgMatches) -> Result<(String, u64), Cli
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     } else if cr_matches.is_present("delete") {
         if cr_matches.is_present("owner") {
             return Err(CliError::UserError(
@@ -413,7 +413,7 @@ fn contract_registry(cr_matches: &clap::ArgMatches) -> Result<(String, u64), Cli
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     } else {
         let owners = owners.ok_or_else(|| {
             CliError::UserError("create action requires one or more --owner arguments".into())
@@ -427,7 +427,7 @@ fn contract_registry(cr_matches: &clap::ArgMatches) -> Result<(String, u64), Cli
             .into_batch_builder(&*signer)?
             .build(&*signer)?;
 
-        submit_batches(&url, vec![batch])?
+        submit_batches(url, vec![batch])?
     };
     Ok((batch_link, wait))
 }
@@ -464,7 +464,7 @@ fn smart_permission(sp_matches: &clap::ArgMatches) -> Result<(String, u64), CliE
                 .into_batch_builder(&*signer)?
                 .build(&*signer)?;
 
-            submit_batches(&url, vec![batch])?
+            submit_batches(url, vec![batch])?
         }
         ("update", Some(m)) => {
             let org_id = m.value_of("org_id").unwrap();
@@ -484,7 +484,7 @@ fn smart_permission(sp_matches: &clap::ArgMatches) -> Result<(String, u64), CliE
                 .into_batch_builder(&*signer)?
                 .build(&*signer)?;
 
-            submit_batches(&url, vec![batch])?
+            submit_batches(url, vec![batch])?
         }
         ("delete", Some(m)) => {
             let org_id = m.value_of("org_id").unwrap();
@@ -500,7 +500,7 @@ fn smart_permission(sp_matches: &clap::ArgMatches) -> Result<(String, u64), CliE
                 .into_batch_builder(&*signer)?
                 .build(&*signer)?;
 
-            submit_batches(&url, vec![batch])?
+            submit_batches(url, vec![batch])?
         }
         _ => {
             return Err(CliError::UserError(
