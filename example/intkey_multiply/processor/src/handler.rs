@@ -610,7 +610,7 @@ impl TransactionHandler for IntkeyMultiplyTransactionHandler {
                 new_value
             )));
         };
-        state.set(&payload.get_name_a(), new_value as u32)
+        state.set(payload.get_name_a(), new_value as u32)
     }
 }
 #[cfg(target_arch = "wasm32")]
