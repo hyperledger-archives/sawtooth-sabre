@@ -704,11 +704,11 @@ pub fn log_message(log_level: LogLevel, log_string: String) {
         // WasmBuffer was created properly, log message otherwise ignore
         if let Ok(log_buffer) = WasmBuffer::new(log_string.as_bytes()) {
             match log_level {
-                LogLevel::Trace => externs::log_buffer(4 as i32, log_buffer.to_raw()),
-                LogLevel::Debug => externs::log_buffer(3 as i32, log_buffer.to_raw()),
-                LogLevel::Info => externs::log_buffer(2 as i32, log_buffer.to_raw()),
-                LogLevel::Warn => externs::log_buffer(1 as i32, log_buffer.to_raw()),
-                LogLevel::Error => externs::log_buffer(0 as i32, log_buffer.to_raw()),
+                LogLevel::Trace => externs::log_buffer(4_i32, log_buffer.to_raw()),
+                LogLevel::Debug => externs::log_buffer(3_i32, log_buffer.to_raw()),
+                LogLevel::Info => externs::log_buffer(2_i32, log_buffer.to_raw()),
+                LogLevel::Warn => externs::log_buffer(1_i32, log_buffer.to_raw()),
+                LogLevel::Error => externs::log_buffer(0_i32, log_buffer.to_raw()),
             };
         }
     }
