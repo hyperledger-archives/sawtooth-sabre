@@ -667,8 +667,8 @@ impl FromNative<CreateContractRegistryAction> for protos::payload::CreateContrac
 
 impl FromBytes<CreateContractRegistryAction> for CreateContractRegistryAction {
     fn from_bytes(bytes: &[u8]) -> Result<CreateContractRegistryAction, ProtoConversionError> {
-        let proto: protos::payload::CreateContractRegistryAction =
-            Message::parse_from_bytes(bytes).map_err(|_| {
+        let proto: protos::payload::CreateContractRegistryAction = Message::parse_from_bytes(bytes)
+            .map_err(|_| {
                 ProtoConversionError::SerializationError(
                     "Unable to get CreateContractRegistryAction from bytes".to_string(),
                 )
@@ -772,8 +772,8 @@ impl FromNative<DeleteContractRegistryAction> for protos::payload::DeleteContrac
 
 impl FromBytes<DeleteContractRegistryAction> for DeleteContractRegistryAction {
     fn from_bytes(bytes: &[u8]) -> Result<DeleteContractRegistryAction, ProtoConversionError> {
-        let proto: protos::payload::DeleteContractRegistryAction =
-            Message::parse_from_bytes(bytes).map_err(|_| {
+        let proto: protos::payload::DeleteContractRegistryAction = Message::parse_from_bytes(bytes)
+            .map_err(|_| {
                 ProtoConversionError::SerializationError(
                     "Unable to get DeleteContractRegistryAction from bytes".to_string(),
                 )

@@ -219,10 +219,10 @@ impl FromBytes<ContractRegistry> for ContractRegistry {
     fn from_bytes(bytes: &[u8]) -> Result<ContractRegistry, ProtoConversionError> {
         let proto: protos::contract_registry::ContractRegistry = Message::parse_from_bytes(bytes)
             .map_err(|_| {
-                ProtoConversionError::SerializationError(
-                    "Unable to get ContractRegistry from bytes".to_string(),
-                )
-            })?;
+            ProtoConversionError::SerializationError(
+                "Unable to get ContractRegistry from bytes".to_string(),
+            )
+        })?;
         proto.into_native()
     }
 }
@@ -631,8 +631,8 @@ impl FromNative<NamespaceRegistry> for protos::namespace_registry::NamespaceRegi
 
 impl FromBytes<NamespaceRegistry> for NamespaceRegistry {
     fn from_bytes(bytes: &[u8]) -> Result<NamespaceRegistry, ProtoConversionError> {
-        let proto: protos::namespace_registry::NamespaceRegistry =
-            Message::parse_from_bytes(bytes).map_err(|_| {
+        let proto: protos::namespace_registry::NamespaceRegistry = Message::parse_from_bytes(bytes)
+            .map_err(|_| {
                 ProtoConversionError::SerializationError(
                     "Unable to get NamespaceRegistry from bytes".to_string(),
                 )
@@ -933,12 +933,11 @@ impl FromNative<Contract> for protos::contract::Contract {
 
 impl FromBytes<Contract> for Contract {
     fn from_bytes(bytes: &[u8]) -> Result<Contract, ProtoConversionError> {
-        let proto: protos::contract::Contract =
-            Message::parse_from_bytes(bytes).map_err(|_| {
-                ProtoConversionError::SerializationError(
-                    "Unable to get Contract from bytes".to_string(),
-                )
-            })?;
+        let proto: protos::contract::Contract = Message::parse_from_bytes(bytes).map_err(|_| {
+            ProtoConversionError::SerializationError(
+                "Unable to get Contract from bytes".to_string(),
+            )
+        })?;
         proto.into_native()
     }
 }
@@ -1394,8 +1393,8 @@ impl FromNative<SmartPermissionList> for protos::smart_permission::SmartPermissi
 
 impl FromBytes<SmartPermissionList> for SmartPermissionList {
     fn from_bytes(bytes: &[u8]) -> Result<SmartPermissionList, ProtoConversionError> {
-        let proto: protos::smart_permission::SmartPermissionList =
-            Message::parse_from_bytes(bytes).map_err(|_| {
+        let proto: protos::smart_permission::SmartPermissionList = Message::parse_from_bytes(bytes)
+            .map_err(|_| {
                 ProtoConversionError::SerializationError(
                     "Unable to get SmartPermissionList from bytes".to_string(),
                 )
