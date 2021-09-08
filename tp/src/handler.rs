@@ -544,9 +544,8 @@ fn create_contract_registry(
 
     for entry in setting.get_entries() {
         if entry.key == ADMINISTRATORS_SETTING_KEY {
-            let values = entry.value.split(',');
-            let value_vec: Vec<&str> = values.collect();
-            if !value_vec.contains(&signer) {
+            let mut values = entry.value.split(',');
+            if !values.any(|x| x == signer) {
                 return Err(ApplyError::InvalidTransaction(format!(
                     "Only admins can create a contract registry: {}",
                     signer,
@@ -685,9 +684,8 @@ fn create_namespace_registry(
 
     for entry in setting.get_entries() {
         if entry.key == ADMINISTRATORS_SETTING_KEY {
-            let values = entry.value.split(',');
-            let value_vec: Vec<&str> = values.collect();
-            if !value_vec.contains(&signer) {
+            let mut values = entry.value.split(',');
+            if !values.any(|x| x == signer) {
                 return Err(ApplyError::InvalidTransaction(format!(
                     "Only admins can create a namespace registry: {}",
                     signer,
@@ -1082,9 +1080,8 @@ fn can_update_namespace_registry(
 
         for entry in setting.get_entries() {
             if entry.key == ADMINISTRATORS_SETTING_KEY {
-                let values = entry.value.split(',');
-                let value_vec: Vec<&str> = values.collect();
-                if !value_vec.contains(&signer) {
+                let mut values = entry.value.split(',');
+                if !values.any(|x| x == signer) {
                     return Err(ApplyError::InvalidTransaction(format!(
                         "Only owners or admins can update or delete a namespace registry: {}",
                         signer,
@@ -1121,9 +1118,8 @@ fn can_update_contract_registry(
 
         for entry in setting.get_entries() {
             if entry.key == ADMINISTRATORS_SETTING_KEY {
-                let values = entry.value.split(',');
-                let value_vec: Vec<&str> = values.collect();
-                if !value_vec.contains(&signer) {
+                let mut values = entry.value.split(',');
+                if !values.any(|x| x == signer) {
                     return Err(ApplyError::InvalidTransaction(format!(
                         "Only owners or admins can update or delete a contract registry: {}",
                         signer,
