@@ -26,23 +26,23 @@ use transact::{
 pub enum CliError {
     /// The user has provided invalid inputs; the string by this error
     /// is appropriate for display to the user without additional context
-    UserError(String),
-    IoError(std::io::Error),
-    SigningError(signing::Error),
-    HyperError(hyper::Error),
-    ProtocolBuildError(Box<dyn StdError>),
-    ProtoConversionError(ProtoConversionError),
+    User(String),
+    Io(std::io::Error),
+    Signing(signing::Error),
+    Hyper(hyper::Error),
+    ProtocolBuild(Box<dyn StdError>),
+    ProtoConversion(ProtoConversionError),
 }
 
 impl StdError for CliError {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            CliError::UserError(_) => None,
-            CliError::IoError(err) => Some(err),
-            CliError::SigningError(err) => Some(err),
-            CliError::HyperError(err) => Some(err),
-            CliError::ProtocolBuildError(ref err) => Some(err.borrow()),
-            CliError::ProtoConversionError(err) => Some(err),
+            CliError::User(_) => None,
+            CliError::Io(err) => Some(err),
+            CliError::Signing(err) => Some(err),
+            CliError::Hyper(err) => Some(err),
+            CliError::ProtocolBuild(ref err) => Some(err.borrow()),
+            CliError::ProtoConversion(err) => Some(err),
         }
     }
 }
@@ -50,37 +50,37 @@ impl StdError for CliError {
 impl std::fmt::Display for CliError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
-            CliError::UserError(ref s) => write!(f, "Error: {}", s),
-            CliError::IoError(ref err) => write!(f, "IoError: {}", err),
-            CliError::SigningError(ref err) => write!(f, "SigningError: {}", err),
-            CliError::HyperError(ref err) => write!(f, "HyperError: {}", err),
-            CliError::ProtocolBuildError(ref err) => write!(f, "Protocol Error: {}", err),
-            CliError::ProtoConversionError(ref err) => write!(f, "Proto Conversion Error: {}", err),
+            CliError::User(ref s) => write!(f, "Error: {}", s),
+            CliError::Io(ref err) => write!(f, "IoError: {}", err),
+            CliError::Signing(ref err) => write!(f, "SigningError: {}", err),
+            CliError::Hyper(ref err) => write!(f, "HyperError: {}", err),
+            CliError::ProtocolBuild(ref err) => write!(f, "Protocol Error: {}", err),
+            CliError::ProtoConversion(ref err) => write!(f, "Proto Conversion Error: {}", err),
         }
     }
 }
 
 impl From<std::io::Error> for CliError {
     fn from(e: std::io::Error) -> Self {
-        CliError::IoError(e)
+        CliError::Io(e)
     }
 }
 
 impl From<signing::Error> for CliError {
     fn from(e: signing::Error) -> Self {
-        CliError::SigningError(e)
+        CliError::Signing(e)
     }
 }
 
 impl From<hyper::Error> for CliError {
     fn from(e: hyper::Error) -> Self {
-        CliError::HyperError(e)
+        CliError::Hyper(e)
     }
 }
 
 impl From<ProtoConversionError> for CliError {
     fn from(e: ProtoConversionError) -> Self {
-        CliError::ProtoConversionError(e)
+        CliError::ProtoConversion(e)
     }
 }
 
@@ -90,7 +90,7 @@ macro_rules! impl_builder_errors {
         $(
             impl From<$x> for CliError {
                 fn from(e: $x) -> Self {
-                    CliError::ProtocolBuildError(Box::new(e))
+                    CliError::ProtocolBuild(Box::new(e))
                 }
             }
         )*
