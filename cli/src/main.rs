@@ -218,9 +218,9 @@ fn execute(exec_matches: &clap::ArgMatches) -> Result<(String, u64), CliError> {
             CliError::User("exec action requires one or more --outputs arguments".into())
         })?;
     let (name, version) = match contract.split(':').collect::<Vec<_>>() {
-        ref v if (v.len() == 1 || v.len() == 2) && v[0].is_empty() => Err(CliError::User(
-            "contract name must be specified".into(),
-        )),
+        ref v if (v.len() == 1 || v.len() == 2) && v[0].is_empty() => {
+            Err(CliError::User("contract name must be specified".into()))
+        }
         ref v if v.len() == 1 || v.len() == 2 && v[1].is_empty() => Ok((v[0], "latest")),
         ref v if v.len() == 2 => Ok((v[0], v[1])),
         _ => Err(CliError::User(
