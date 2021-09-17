@@ -149,7 +149,7 @@ fn test_sabre() {
     signer.pop();
 
     if let Err(err) = pike_setup(&signer) {
-        panic!(format!("Pike setup error {}", err));
+        panic!("Pike setup error {}", err);
     }
 
     // Test that Sabre will return an invalid transaction when the Contract does not
@@ -169,7 +169,7 @@ fn test_sabre() {
             + " --inputs 1cf126 --outputs 1cf126",
     ) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "INVALID");
     let message: String = response["data"][0]["invalid_transactions"][0]["message"].to_string();
@@ -188,7 +188,7 @@ fn test_sabre() {
     // Result: Invalid Transaction, The Contract Registry does not exist
     let response = match sabre_cli("upload -f ".to_string() + &INTKEY_MULTIPLY_DEF) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "INVALID");
     let message: String = response["data"][0]["invalid_transactions"][0]["message"].to_string();
@@ -204,7 +204,7 @@ fn test_sabre() {
     // Result: Committed.
     let response = match sabre_cli("cr --create intkey_multiply --owner ".to_string() + &signer) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -220,7 +220,7 @@ fn test_sabre() {
     // Result: Committed.
     let response = match sabre_cli("upload -f ".to_string() + &INTKEY_MULTIPLY_DEF) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -241,7 +241,7 @@ fn test_sabre() {
             + " --inputs 1cf126 --outputs 1cf126",
     ) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "INVALID");
     let message: String = response["data"][0]["invalid_transactions"][0]["message"].to_string();
@@ -257,7 +257,7 @@ fn test_sabre() {
     // Result: Committed
     let response = match sabre_cli("ns --create 1cf126 --owner ".to_string() + &signer) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -270,7 +270,7 @@ fn test_sabre() {
     // Result: Committed
     let response = match sabre_cli("ns --create 00ec03 --owner test_owner".to_string()) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -291,7 +291,7 @@ fn test_sabre() {
             + " --inputs 1cf126 --outputs 1cf126",
     ) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "INVALID");
     let message: String = response["data"][0]["invalid_transactions"][0]["message"].to_string();
@@ -310,7 +310,7 @@ fn test_sabre() {
     // Result: Committed
     let response = match sabre_cli("perm 1cf126 intkey_multiply --read --write".to_string()) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -326,7 +326,7 @@ fn test_sabre() {
     // Result: Committed
     let response = match sabre_cli("perm cad11d intkey_multiply --read --write".to_string()) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -342,7 +342,7 @@ fn test_sabre() {
     // Result: Committed
     let response = match sabre_cli("perm 00ec03 intkey_multiply --read --write".to_string()) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -351,7 +351,7 @@ fn test_sabre() {
         CREATE_ORG_PAYLOAD
     )) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -367,7 +367,7 @@ fn test_sabre() {
         INTKEY_SMART_PERMISSION
     )) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -387,7 +387,7 @@ fn test_sabre() {
             + " --inputs 1cf126 cad11d 00ec03 --outputs 1cf126",
     ) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "COMMITTED");
 
@@ -408,7 +408,7 @@ fn test_sabre() {
             + " --inputs 1cf126 cad11d 00ec03 --outputs 1cf126",
     ) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "INVALID");
     let message: String = response["data"][0]["invalid_transactions"][0]["message"].to_string();
@@ -432,7 +432,7 @@ fn test_sabre() {
             + " --inputs 1cf126 cad11d 00ec03 --outputs 1cf126",
     ) {
         Ok(x) => x,
-        Err(err) => panic!(format!("No Response {}", err)),
+        Err(err) => panic!("No Response {}", err),
     };
     assert!(response["data"][0]["status"] == "INVALID");
     let message: String = response["data"][0]["invalid_transactions"][0]["message"].to_string();
