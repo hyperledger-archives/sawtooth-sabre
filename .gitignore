@@ -14,6 +14,9 @@
 /integration/target/
 /integration/Cargo.lock
 
+/sdk/Cargo.lock
+/sdk/target/
+
 /sdks/rust/Cargo.lock
 /sdks/rust/target/
 /sdks/assemblyscript/node_modules
