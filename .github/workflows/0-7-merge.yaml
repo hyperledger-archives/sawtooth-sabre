@@ -1,9 +1,9 @@
-name: Merge
+name: 0-7 Merge
 
 on:
   push:
-  schedule:
-    - cron: "0 7 * * *"
+    branches:
+      - 0-7
 
 env:
   CARGO_TERM_COLOR: always

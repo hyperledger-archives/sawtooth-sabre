@@ -1,4 +1,4 @@
-name: Unit Test Sabre
+name: 0-7 Build Docker Images
 
 on:
   pull_request:
@@ -11,10 +11,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit_test_sabre:
+  build_docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Display envvars
         run: env
@@ -22,5 +24,5 @@ jobs:
       - name: Install Just
         run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 
-      - name: Unit Test Sabre
-        run: just ci-test
+      - name: Build Docker Images
+        run: just docker-build
