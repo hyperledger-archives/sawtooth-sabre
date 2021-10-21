@@ -1,4 +1,4 @@
-name: Run Integration Tests
+name: 0-7 Lint Sabre
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  integration_tests:
+  lint_sabre:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,5 +22,5 @@ jobs:
       - name: Install Just
         run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 
-      - name: Run Integration Tests
-        run: just integration-test
+      - name: Run Lint/Clippy on Sabre
+        run: just ci-lint

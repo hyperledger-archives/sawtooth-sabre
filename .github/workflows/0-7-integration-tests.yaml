@@ -1,4 +1,4 @@
-name: Build Docker Images
+name: 0-7 Run Integration Tests
 
 on:
   pull_request:
@@ -11,12 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build_docker:
+  integration_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Display envvars
         run: env
@@ -24,5 +22,5 @@ jobs:
       - name: Install Just
         run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
 
-      - name: Build Docker Images
-        run: just docker-build
+      - name: Run Integration Tests
+        run: just integration-test
