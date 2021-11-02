@@ -2378,6 +2378,7 @@ fn bytes_to_hex_str(b: &[u8]) -> String {
         .join("")
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 #[cfg(test)]
 mod tests {
     use super::*;
