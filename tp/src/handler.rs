@@ -59,12 +59,12 @@ pub struct SabreTransactionHandler {
     family_name: String,
     family_versions: Vec<String>,
     namespaces: Vec<String>,
-    admin_permissions: Box<dyn AdminPermission>,
+    admin_permissions: Box<dyn AdminPermission + Send>,
 }
 
 impl SabreTransactionHandler {
     /// Constructs a new SabreTransactionHandler
-    pub fn new(admin_permissions: Box<dyn AdminPermission>) -> SabreTransactionHandler {
+    pub fn new(admin_permissions: Box<dyn AdminPermission + Send>) -> SabreTransactionHandler {
         SabreTransactionHandler {
             family_name: "sabre".into(),
             family_versions: vec!["0.5".into(), "0.6".into(), SABRE_PROTOCOL_VERSION.into()],
