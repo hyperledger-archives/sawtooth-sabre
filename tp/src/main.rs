@@ -29,7 +29,10 @@ fn main() {
         (@arg verbose: -v --verbose +multiple
          "increase output verbosity"))
     .get_matches();
-    let logger = simple_logger::SimpleLogger::new();
+    let logger = simple_logger::SimpleLogger::new()
+        // Switch to UTC timestamps, as local timestamps are not stable, by default. They are only
+        // available if the compiler flag "unsound_local_offset" has been set.
+        .with_utc_timestamps();
     let logger = match matches.occurrences_of("verbose") {
         0 => logger.with_level(LevelFilter::Warn),
         1 => logger.with_level(LevelFilter::Info),
