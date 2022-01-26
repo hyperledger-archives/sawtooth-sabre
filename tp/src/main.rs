@@ -17,12 +17,16 @@ extern crate clap;
 #[macro_use]
 extern crate log;
 
+mod handler;
+
 use clap::Arg;
 use log::LevelFilter;
 
-use sawtooth_sabre::admin;
-use sawtooth_sabre::handler::SabreTransactionHandler;
 use sawtooth_sdk::processor::TransactionProcessor;
+use transact::families::sabre::admin;
+use transact::families::sabre::handler::SabreTransactionHandler;
+
+use self::handler::SabreHandler;
 
 fn main() {
     let mut app = clap_app!(wasm_store_tp =>
@@ -60,9 +64,13 @@ fn main() {
     let handler = {
         if matches.is_present("admin_allow_all") {
             warn!("Starting Sabre transaction processor without admin key verifcation");
-            SabreTransactionHandler::new(Box::new(admin::AllowAllAdminPermission::default()))
+            SabreHandler::new(SabreTransactionHandler::new(Box::new(
+                admin::AllowAllAdminPermission::default(),
+            )))
         } else {
-            SabreTransactionHandler::new(Box::new(admin::SettingsAdminPermission::default()))
+            SabreHandler::new(SabreTransactionHandler::new(Box::new(
+                admin::SettingsAdminPermission::default(),
+            )))
         }
     };
 

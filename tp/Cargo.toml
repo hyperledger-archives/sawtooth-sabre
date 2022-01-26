@@ -24,10 +24,6 @@ conf-files = [
     "/etc/default/sawtooth-sabre"
 ]
 
-[lib]
-name = "sawtooth_sabre"
-path = "src/lib.rs"
-
 [[bin]]
 name = "sawtooth-sabre"
 path = "src/main.rs"
