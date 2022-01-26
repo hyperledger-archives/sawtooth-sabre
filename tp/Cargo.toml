@@ -41,6 +41,7 @@ clap = "2"
 protobuf = "2.19"
 sha2 = "0.10"
 wasmi = "0.9"
+transact = {version = "0.5", features = ["family-sabre"]}
 
 [build-dependencies]
 protoc-rust = "2"
@@ -59,3 +60,6 @@ experimental = [
     "stable",
     # The following features are experimental:
 ]
+
+[patch.crates-io]
+transact = { git = "https://github.com/hyperledger/transact" }
