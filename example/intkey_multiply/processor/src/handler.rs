@@ -134,7 +134,7 @@ fn decode_intkey(hex_string: String) -> Result<BTreeMap<String, u32>, ApplyError
             .get(start..start + length)
             .ok_or_else(|| ApplyError::InvalidTransaction("Unable to hex for the Name".into()))?;
 
-        let name_bytes = decode(name_hex.to_string()).map_err(|err| {
+        let name_bytes = decode(name_hex).map_err(|err| {
             ApplyError::InvalidTransaction(format!("Unable to decode cbor: {}", err))
         })?;
 

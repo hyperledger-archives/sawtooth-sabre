@@ -185,8 +185,8 @@ impl FromProto<protos::pike_state::Agent> for Agent {
             roles: agent.get_roles().to_vec(),
             metadata: agent
                 .get_metadata()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(KeyValueEntry::from_proto)
                 .collect::<Result<Vec<KeyValueEntry>, ProtoConversionError>>()?,
         })
@@ -205,8 +205,8 @@ impl FromNative<Agent> for protos::pike_state::Agent {
         agent_proto.set_metadata(RepeatedField::from_vec(
             agent
                 .metadata()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(KeyValueEntry::into_proto)
                 .collect::<Result<Vec<protos::pike_state::KeyValueEntry>, ProtoConversionError>>(
                 )?,
@@ -339,8 +339,8 @@ impl FromProto<protos::pike_state::AgentList> for AgentList {
         Ok(AgentList {
             agents: agent_list
                 .get_agents()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Agent::from_proto)
                 .collect::<Result<Vec<Agent>, ProtoConversionError>>()?,
         })
@@ -354,8 +354,8 @@ impl FromNative<AgentList> for protos::pike_state::AgentList {
         agent_list_proto.set_agents(RepeatedField::from_vec(
             agent_list
                 .agents()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Agent::into_proto)
                 .collect::<Result<Vec<protos::pike_state::Agent>, ProtoConversionError>>()?,
         ));
@@ -478,8 +478,8 @@ impl FromProto<protos::pike_state::Organization> for Organization {
             address: org.get_address().to_string(),
             metadata: org
                 .get_metadata()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(KeyValueEntry::from_proto)
                 .collect::<Result<Vec<KeyValueEntry>, ProtoConversionError>>()?,
         })
@@ -495,8 +495,8 @@ impl FromNative<Organization> for protos::pike_state::Organization {
         org_proto.set_address(org.address().to_string());
         org_proto.set_metadata(RepeatedField::from_vec(
             org.metadata()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(KeyValueEntry::into_proto)
                 .collect::<Result<Vec<protos::pike_state::KeyValueEntry>, ProtoConversionError>>(
                 )?,
@@ -631,8 +631,8 @@ impl FromProto<protos::pike_state::OrganizationList> for OrganizationList {
         Ok(OrganizationList {
             organizations: organization_list
                 .get_organizations()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Organization::from_proto)
                 .collect::<Result<Vec<Organization>, ProtoConversionError>>()?,
         })
@@ -646,8 +646,8 @@ impl FromNative<OrganizationList> for protos::pike_state::OrganizationList {
         org_list_proto.set_organizations(RepeatedField::from_vec(
             org_list
                 .organizations()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Organization::into_proto)
                 .collect::<Result<Vec<protos::pike_state::Organization>, ProtoConversionError>>()?,
         ));
