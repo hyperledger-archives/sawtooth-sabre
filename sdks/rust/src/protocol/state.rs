@@ -185,8 +185,8 @@ impl FromProto<protos::contract_registry::ContractRegistry> for ContractRegistry
             name: proto.get_name().to_string(),
             versions: proto
                 .get_versions()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Version::from_proto)
                 .collect::<Result<Vec<Version>, ProtoConversionError>>()?,
             owners: proto.get_owners().to_vec(),
@@ -201,8 +201,8 @@ impl FromNative<ContractRegistry> for protos::contract_registry::ContractRegistr
         proto.set_versions(RepeatedField::from_vec(
             contract_registry
                 .versions()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Version::into_proto)
                 .collect::<Result<
                     Vec<protos::contract_registry::ContractRegistry_Version>,
@@ -335,8 +335,8 @@ impl FromProto<protos::contract_registry::ContractRegistryList> for ContractRegi
         Ok(ContractRegistryList {
             registries: proto
                 .get_registries()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(ContractRegistry::from_proto)
                 .collect::<Result<Vec<ContractRegistry>, ProtoConversionError>>()?,
         })
@@ -352,8 +352,8 @@ impl FromNative<ContractRegistryList> for protos::contract_registry::ContractReg
             RepeatedField::from_vec(
                 contract_registry_list
                     .registries()
-                    .to_vec()
-                    .into_iter()
+                    .iter()
+                    .cloned()
                     .map(ContractRegistry::into_proto)
                     .collect::<Result<
                         Vec<protos::contract_registry::ContractRegistry>,
@@ -600,8 +600,8 @@ impl FromProto<protos::namespace_registry::NamespaceRegistry> for NamespaceRegis
             owners: proto.get_owners().to_vec(),
             permissions: proto
                 .get_permissions()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Permission::from_proto)
                 .collect::<Result<Vec<Permission>, ProtoConversionError>>()?,
         })
@@ -616,8 +616,8 @@ impl FromNative<NamespaceRegistry> for protos::namespace_registry::NamespaceRegi
         proto.set_permissions(RepeatedField::from_vec(
             native
                 .permissions()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Permission::into_proto)
                 .collect::<Result<
                     Vec<protos::namespace_registry::NamespaceRegistry_Permission>,
@@ -749,8 +749,8 @@ impl FromProto<protos::namespace_registry::NamespaceRegistryList> for NamespaceR
         Ok(NamespaceRegistryList {
             registries: proto
                 .get_registries()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(NamespaceRegistry::from_proto)
                 .collect::<Result<Vec<NamespaceRegistry>, ProtoConversionError>>()?,
         })
@@ -766,8 +766,8 @@ impl FromNative<NamespaceRegistryList> for protos::namespace_registry::Namespace
             RepeatedField::from_vec(
                 namespace_registry_list
                     .registries()
-                    .to_vec()
-                    .into_iter()
+                    .iter()
+                    .cloned()
                     .map(NamespaceRegistry::into_proto)
                     .collect::<Result<
                         Vec<protos::namespace_registry::NamespaceRegistry>,
@@ -1095,8 +1095,8 @@ impl FromProto<protos::contract::ContractList> for ContractList {
         Ok(ContractList {
             contracts: proto
                 .get_contracts()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Contract::from_proto)
                 .collect::<Result<Vec<Contract>, ProtoConversionError>>()?,
         })
@@ -1109,8 +1109,8 @@ impl FromNative<ContractList> for protos::contract::ContractList {
         proto.set_contracts(RepeatedField::from_vec(
             contract_list
                 .contracts()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(Contract::into_proto)
                 .collect::<Result<Vec<protos::contract::Contract>, ProtoConversionError>>()?,
         ));
@@ -1365,8 +1365,8 @@ impl FromProto<protos::smart_permission::SmartPermissionList> for SmartPermissio
         Ok(SmartPermissionList {
             smart_permissions: proto
                 .get_smart_permissions()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(SmartPermission::from_proto)
                 .collect::<Result<Vec<SmartPermission>, ProtoConversionError>>()?,
         })
@@ -1381,8 +1381,8 @@ impl FromNative<SmartPermissionList> for protos::smart_permission::SmartPermissi
         proto.set_smart_permissions(RepeatedField::from_vec(
             smart_permissions_list
                 .smart_permissions()
-                .to_vec()
-                .into_iter()
+                .iter()
+                .cloned()
                 .map(SmartPermission::into_proto)
                 .collect::<Result<Vec<protos::smart_permission::SmartPermission>, ProtoConversionError>>()?,
         ));
