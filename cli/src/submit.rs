@@ -113,25 +113,25 @@ pub fn wait_for_batch(url: &str, wait: u64) -> Result<StatusResponse, CliError> 
     Ok(body)
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 struct Link {
     link: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct BatchStatus {
     id: String,
     status: String,
     invalid_transactions: Vec<InvalidTransaction>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct InvalidTransaction {
     id: String,
     message: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, PartialEq)]
 pub struct StatusResponse {
     data: Vec<BatchStatus>,
     link: String,
@@ -189,5 +189,101 @@ impl fmt::Display for StatusResponse {
             data_string_vec.join(","),
             self.link
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    use cylinder::{secp256k1::Secp256k1Context, Context};
+    use mockito;
+    use transact::protocol::{
+        batch::{Batch, BatchBuilder},
+        transaction::{HashMethod, TransactionBuilder},
+    };
+
+    fn parse_hex(hex: &str) -> Vec<u8> {
+        let mut res = vec![];
+        for i in (0..hex.len()).step_by(2) {
+            res.push(u8::from_str_radix(&hex[i..i + 2], 16).unwrap());
+        }
+        res
+    }
+
+    fn mock_key(x: u8) -> String {
+        x.to_string().repeat(66)
+    }
+
+    struct MockBatch {}
+
+    impl MockBatch {
+        fn new() -> Batch {
+            let context = Secp256k1Context::new();
+            let key = context.new_random_private_key();
+            let signer = context.new_signer(key);
+
+            let transaction = TransactionBuilder::new()
+                .with_batcher_public_key(parse_hex(&mock_key(1)))
+                .with_dependencies(vec![mock_key(2), mock_key(3)])
+                .with_family_name("test_family".to_string())
+                .with_family_version("0.1".to_string())
+                .with_inputs(vec![parse_hex(&mock_key(4)), parse_hex(&mock_key(5)[0..4])])
+                .with_nonce("f9kdzz".to_string().into_bytes())
+                .with_outputs(vec![parse_hex(&mock_key(6)), parse_hex(&mock_key(7)[0..4])])
+                .with_payload_hash_method(HashMethod::Sha512)
+                .with_payload(vec![0x05, 0x06, 0x07, 0x08])
+                .build(&*signer)
+                .expect("Failed to build transaction");
+
+            BatchBuilder::new()
+                .with_transactions(vec![transaction])
+                .build(&*signer)
+                .expect("Failed to build transact batch")
+        }
+    }
+
+    #[test]
+    // Asserts that URLs with a scheme other that http return an error
+    fn test_cli_submit_batches_scheme() {
+        assert!(submit_batches("https://test.com", vec![MockBatch::new()]).is_err());
+        assert!(submit_batches("file://test", vec![MockBatch::new()]).is_err());
+    }
+
+    #[test]
+    // Asserts that submit_batches() returns data as expected
+    fn test_cli_submit_batches() {
+        let url = mockito::server_url();
+        let _m1 = mockito::mock("POST", "/batches")
+            .with_body("{\"link\":\"test.com/success\"}")
+            .create();
+        let expected = "test.com/success".to_string();
+        let result = submit_batches(&url, vec![MockBatch::new()]);
+
+        assert_eq!(result.unwrap(), expected);
+    }
+
+    #[test]
+    // Asserts that URLs with a scheme other that http return an error
+    fn test_cli_wait_for_batches_scheme() {
+        assert!(submit_batches("https://test.com", vec![MockBatch::new()]).is_err());
+        assert!(submit_batches("file://test", vec![MockBatch::new()]).is_err());
+    }
+
+    #[test]
+    // Asserts that wait_for_batch() returns data as expected
+    fn test_cli_wait_for_batch() {
+        let url = mockito::server_url();
+        let _m1 = mockito::mock("GET", "/test?foo=bar&wait=30")
+            .with_body("{\"data\":[], \"link\":\"test.com/success\"}")
+            .create();
+        let expected = StatusResponse {
+            data: Vec::new(),
+            link: "test.com/success".to_string(),
+        };
+        let result = wait_for_batch(&format!("{}/test?foo=bar", &url), 30);
+
+        assert_eq!(result.unwrap(), expected);
     }
 }

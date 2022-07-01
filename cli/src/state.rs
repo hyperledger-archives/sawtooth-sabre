@@ -70,3 +70,34 @@ pub struct StateEntry {
     pub address: String,
     pub data: String,
 }
+
+#[cfg(test)]
+mod tests {
+
+    use mockito;
+
+    use super::*;
+
+    #[test]
+    // Asserts that URLs with a scheme other that http return an error
+    fn test_cli_get_state_with_prefix_scheme() {
+        assert!(get_state_with_prefix("https://test.com", "test").is_err());
+        assert!(get_state_with_prefix("file://test", "test").is_err());
+    }
+
+    #[test]
+    // Asserts that get_state_with_prefix() returns data as expected
+    fn test_cli_get_state_with_prefix() {
+        let url = mockito::server_url();
+        let _m1 = mockito::mock("GET", "/state?address=test")
+            .with_body("{\"data\":[{\"address\": \"abc\", \"data\": \"def\"}]}")
+            .create();
+        let expected = vec![StateEntry {
+            address: "abc".to_string(),
+            data: "def".to_string(),
+        }];
+        let result = get_state_with_prefix(&url, "test");
+
+        assert_eq!(result.unwrap(), expected);
+    }
+}

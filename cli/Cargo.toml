@@ -28,6 +28,9 @@ transact = "0.5"
 [build-dependencies]
 protoc-rust = "2"
 
+[dev-dependencies]
+mockito = "0.31"
+
 [features]
 default = []
 
