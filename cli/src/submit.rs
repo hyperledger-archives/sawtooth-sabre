@@ -14,103 +14,64 @@
 
 //! Contains functions which assist with batch submission to a REST API
 
-use futures::Stream;
-use futures::{future, Future};
-use hyper::client::{Client, Request};
-use hyper::header::{ContentLength, ContentType};
-use hyper::Method;
-use hyper::StatusCode;
-use std::{fmt, str};
+use reqwest::{
+    header::{CONTENT_LENGTH, CONTENT_TYPE},
+    Url,
+};
+use std::fmt;
 
 use transact::{protocol::batch::Batch, protos::IntoBytes};
 
 use crate::error::CliError;
 
 pub fn submit_batches(url: &str, batch_list: Vec<Batch>) -> Result<String, CliError> {
-    let post_url = String::from(url) + "/batches";
-    let hyper_uri = match post_url.parse::<hyper::Uri>() {
-        Ok(uri) => uri,
-        Err(e) => return Err(CliError::User(format!("Invalid URL: {}: {}", e, url))),
-    };
+    let url = Url::parse(&format!("{}/batches", url))
+        .map_err(|e| CliError::User(format!("Invalid URL: {}: {}", e, url)))?;
 
-    match hyper_uri.scheme() {
-        Some(scheme) => {
-            if scheme != "http" {
-                return Err(CliError::User(format!(
-                    "Unsupported scheme ({}) in URL: {}",
-                    scheme, url
-                )));
-            }
-        }
-        None => {
-            return Err(CliError::User(format!("No scheme in URL: {}", url)));
+    match url.scheme() {
+        "http" => (),
+        "" => return Err(CliError::User(format!("No scheme in URL: {}", url))),
+        s => {
+            return Err(CliError::User(format!(
+                "Unsupported scheme ({}) in URL: {}",
+                s, url
+            )))
         }
     }
 
-    let mut core = tokio_core::reactor::Core::new()?;
-    let handle = core.handle();
-    let client = Client::configure().build(&handle);
-
     let bytes = batch_list.into_bytes()?;
+    let client = reqwest::blocking::Client::new();
+    let response = client
+        .post(url)
+        .header(CONTENT_TYPE, "application/octet-stream")
+        .header(CONTENT_LENGTH, bytes.len())
+        .body(bytes)
+        .send()?
+        .json::<Link>()?;
 
-    let mut req = Request::new(Method::Post, hyper_uri);
-    req.headers_mut().set(ContentType::octet_stream());
-    req.headers_mut().set(ContentLength(bytes.len() as u64));
-    req.set_body(bytes);
+    println!("Response Body:\n{:?}", response);
 
-    let work = client.request(req).and_then(|res| {
-        res.body()
-            .concat2()
-            .and_then(move |chunks| future::ok(serde_json::from_slice::<Link>(&chunks).unwrap()))
-    });
-
-    let batch_link = core.run(work)?;
-    println!("Response Body:\n{:?}", batch_link);
-
-    Ok(batch_link.link)
+    Ok(response.link)
 }
 
 pub fn wait_for_batch(url: &str, wait: u64) -> Result<StatusResponse, CliError> {
-    let url_with_wait_query = format!("{}&wait={}", url, wait);
+    let url = Url::parse(&format!("{url}&wait={wait}", url = url, wait = wait))
+        .map_err(|e| CliError::User(format!("Invalid URL: {}: {}", e, url)))?;
 
-    // Validate url
-
-    let hyper_uri = match url_with_wait_query.parse::<hyper::Uri>() {
-        Ok(uri) => uri,
-        Err(e) => return Err(CliError::User(format!("Invalid URL: {}: {}", e, url))),
-    };
-
-    match hyper_uri.scheme() {
-        Some(scheme) => {
-            if scheme != "http" {
-                return Err(CliError::User(format!(
-                    "Unsupported scheme ({}) in URL: {}",
-                    scheme, url
-                )));
-            }
-        }
-        None => {
-            return Err(CliError::User(format!("No scheme in URL: {}", url)));
+    match url.scheme() {
+        "http" => (),
+        "" => return Err(CliError::User(format!("No scheme in URL: {}", url))),
+        s => {
+            return Err(CliError::User(format!(
+                "Unsupported scheme ({}) in URL: {}",
+                s, url
+            )))
         }
     }
 
-    let mut core = tokio_core::reactor::Core::new()?;
-    let handle = core.handle();
-    let client = Client::configure().build(&handle);
+    let response = reqwest::blocking::get(url)?.json::<StatusResponse>()?;
 
-    let work = client.get(hyper_uri).and_then(|res| {
-        if res.status() == StatusCode::ServiceUnavailable {
-            panic!("Service Unavailable");
-        } else {
-            res.body().concat2().and_then(move |chunks| {
-                future::ok(serde_json::from_slice::<StatusResponse>(&chunks).unwrap())
-            })
-        }
-    });
-
-    let body = core.run(work)?;
-
-    Ok(body)
+    Ok(response)
 }
 
 #[derive(Deserialize, Debug, PartialEq)]

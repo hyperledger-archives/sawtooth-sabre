@@ -29,7 +29,7 @@ pub enum CliError {
     User(String),
     Io(std::io::Error),
     Signing(String),
-    Hyper(hyper::Error),
+    Request(reqwest::Error),
     ProtocolBuild(Box<dyn StdError>),
     ProtoConversion(ProtoConversionError),
     TransactProtoConversion(TransactProtoConversionError),
@@ -41,7 +41,7 @@ impl StdError for CliError {
             CliError::User(_) => None,
             CliError::Io(err) => Some(err),
             CliError::Signing(_) => None,
-            CliError::Hyper(err) => Some(err),
+            CliError::Request(err) => Some(err),
             CliError::ProtocolBuild(ref err) => Some(err.borrow()),
             CliError::ProtoConversion(err) => Some(err),
             CliError::TransactProtoConversion(err) => Some(err),
@@ -55,7 +55,7 @@ impl std::fmt::Display for CliError {
             CliError::User(ref s) => write!(f, "Error: {}", s),
             CliError::Io(ref err) => write!(f, "IoError: {}", err),
             CliError::Signing(ref msg) => write!(f, "SigningError: {}", msg),
-            CliError::Hyper(ref err) => write!(f, "HyperError: {}", err),
+            CliError::Request(ref err) => write!(f, "RequestError: {}", err),
             CliError::ProtocolBuild(ref err) => write!(f, "Protocol Error: {}", err),
             CliError::ProtoConversion(ref err) => write!(f, "Proto Conversion Error: {}", err),
             CliError::TransactProtoConversion(ref err) => {
@@ -71,9 +71,9 @@ impl From<std::io::Error> for CliError {
     }
 }
 
-impl From<hyper::Error> for CliError {
-    fn from(e: hyper::Error) -> Self {
-        CliError::Hyper(e)
+impl From<reqwest::Error> for CliError {
+    fn from(e: reqwest::Error) -> Self {
+        CliError::Request(e)
     }
 }
 
