@@ -55,19 +55,13 @@ build:
     done
     echo "\n\033[92mBuild Success\033[0m\n"
 
-build-docs:
-    #!/usr/bin/env sh
-    set -e
-    docker-compose -f docs/docker-compose.yaml up --exit-code-from sabre-docs
 
 ci:
     just ci-lint
     just ci-test
     just ci-integration-test
-    just ci-build-docs
     just ci-docker-build
 
-ci-build-docs: build-docs
 
 ci-docker-build: docker-build
 
