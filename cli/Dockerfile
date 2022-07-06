@@ -15,12 +15,6 @@
 FROM ubuntu:bionic
 
 RUN apt-get update \
- && apt-get install gnupg -y
-
-# Need sawtooth-sdk to create keys
-RUN echo "deb http://repo.sawtooth.me/ubuntu/nightly bionic universe" >> /etc/apt/sources.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 44FC67F19B2466EA \
- && apt-get update \
  && apt-get install -y -q \
  curl \
  gcc \
@@ -28,8 +22,6 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/nightly bionic universe" >> /etc/ap
  libssl-dev \
  libzmq3-dev \
  pkg-config \
- python3-sawtooth-sdk \
- python3-sawtooth-cli \
  unzip \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
