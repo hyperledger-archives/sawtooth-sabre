@@ -62,11 +62,14 @@ RUN export VERSION=$(../bin/get_version) \
 
 # -------------=== sabre cli docker build ===-------------
 
-FROM hyperledger/sawtooth-shell:nightly
+FROM ubuntu:bionic
 
 COPY --from=sabre-cli-builder /project/cli/target/debian/sabre-cli*.deb /tmp
 
 RUN apt-get update \
+ && apt-get install -y -q --no-install-recommends \
+    ca-certificates \
+    curl \
  && dpkg --unpack /tmp/sabre-cli_*.deb \
  && apt-get -f -y install
 
