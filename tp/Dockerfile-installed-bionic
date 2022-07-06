@@ -18,6 +18,8 @@
 
 FROM ubuntu:bionic as sabre-tp-builder
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 ENV VERSION=AUTO_STRICT
 
 RUN apt-get update \
@@ -36,9 +38,15 @@ RUN apt-get update \
 
 # For Building Protobufs
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
- && curl -OLsS https://github.com/google/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-x86_64.zip \
- && unzip protoc-3.20.0-linux-x86_64.zip -d protoc3 \
- && rm protoc-3.20.0-linux-x86_64.zip
+ && TARGET_ARCH=$(dpkg --print-architecture) \
+ && if [[ $TARGET_ARCH == "arm64" ]]; then \
+      PROTOC_ARCH="aarch_64"; \
+    elif [[ $TARGET_ARCH == "amd64" ]]; then \
+      PROTOC_ARCH="x86_64"; \
+    fi \
+ && curl -OLsS https://github.com/google/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-$PROTOC_ARCH.zip \
+ && unzip -o protoc-3.20.0-linux-$PROTOC_ARCH.zip -d /usr/local \
+ && rm protoc-3.20.0-linux-$PROTOC_ARCH.zip
 
 ENV PATH=$PATH:/protoc3/bin  \
     CARGO_INCREMENTAL=0
