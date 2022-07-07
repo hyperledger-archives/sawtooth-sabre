@@ -15,7 +15,7 @@
 # docker build . -f docker/lint -t run_lint
 # docker run --rm -v $(pwd):/project/sawtooth-sabre run_lint
 
-FROM ubuntu:bionic as SABRE-LINTER
+FROM ubuntu:jammy as SABRE-LINTER
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

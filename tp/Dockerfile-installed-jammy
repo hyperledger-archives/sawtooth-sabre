@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker build -f tp/Dockerfile-installed-bionic -t sawtooth-sabre-tp .
+# docker build -f tp/Dockerfile-installed-jammy -t sawtooth-sabre-tp .
 
 # -------------=== sabre tp build ===-------------
 
-FROM ubuntu:bionic as sabre-tp-builder
+FROM ubuntu:jammy as sabre-tp-builder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -62,7 +62,7 @@ RUN export VERSION=$(../bin/get_version) \
 
 # -------------=== sabre tp build ===-------------
 
-FROM ubuntu:bionic
+FROM ubuntu:jammy
 
 COPY --from=sabre-tp-builder /project/tp/target/debian/sawtooth-sabre_*.deb /tmp
 

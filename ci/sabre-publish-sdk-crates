@@ -21,7 +21,7 @@
 # docker build -f ci/sabre-publish-sdk-crates -t sabre-publish-sdk-crates ci/
 # docker run --rm -v $(pwd):/project/sawtooth-sabre -e CARGO_CRED=%CREDVALUE% sabre-publish-sdk-crates
 
-FROM ubuntu:bionic
+FROM ubuntu:jammy
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

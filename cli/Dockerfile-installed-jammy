@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker build -f cli/Dockerfile-installed-bionic -t sawtooth-sabre-cli .
+# docker build -f cli/Dockerfile-installed-jammy -t sawtooth-sabre-cli .
 
 # -------------=== sabre cli build ===-------------
 
-FROM ubuntu:bionic as sabre-cli-builder
+FROM ubuntu:jammy as sabre-cli-builder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -62,7 +62,7 @@ RUN export VERSION=$(../bin/get_version) \
 
 # -------------=== sabre cli docker build ===-------------
 
-FROM ubuntu:bionic
+FROM ubuntu:jammy
 
 COPY --from=sabre-cli-builder /project/cli/target/debian/sabre-cli*.deb /tmp
 
