@@ -124,7 +124,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   publish_artifacts:
-    needs: [lint_sabre, unit_test_sabre, integration_tests, build_docs, build_docker]
+    needs: [lint_sabre, unit_test_sabre, integration_tests, build_docker]
     if: >-
       github.repository_owner == 'hyperledger'
     runs-on: ubuntu-latest
