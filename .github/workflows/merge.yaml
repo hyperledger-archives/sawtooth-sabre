@@ -143,16 +143,11 @@ jobs:
         with:
           name: sabre
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: sabre-docs
-
       - name: Upload Artifacts To S3
         run: |
           export BRANCH=$(echo $GITHUB_REF | awk -F'/' '{ print $NF }')
           echo $BRANCH
           aws s3 cp ./sabre.zip s3://${{ secrets.AWS_S3_BUCKET }}/sawtooth-sabre/$BRANCH/
-          aws s3 cp ./sabre-docs.zip s3://${{ secrets.AWS_S3_BUCKET }}/sawtooth-sabre/$BRANCH/
 
       - name: Notify Slack of Failure
         if: failure()
