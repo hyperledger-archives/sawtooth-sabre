@@ -14,11 +14,11 @@ clap = "2"
 cylinder = "0.2"
 dirs = "4"
 futures = "0.1"
-hyper = "0.11"
 protobuf = "2.19"
 tokio-core = "0.1"
 users = "0.6"
 yaml-rust = "0.4"
+reqwest = {version = "0.11", features = ["blocking", "json"], default-features = false}
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
@@ -27,6 +27,9 @@ transact = "0.5"
 
 [build-dependencies]
 protoc-rust = "2"
+
+[dev-dependencies]
+mockito = "0.31"
 
 [features]
 default = []

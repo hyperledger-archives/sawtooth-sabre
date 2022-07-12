@@ -14,48 +14,30 @@
 
 //! Contains functions which assist with fetching state
 
-use futures::Stream;
-use futures::{future, Future};
-use hyper::client::{Client, Request};
-use hyper::Method;
-use std::str;
+use reqwest::Url;
 
 use crate::error::CliError;
 
 pub fn get_state_with_prefix(url: &str, prefix: &str) -> Result<Vec<StateEntry>, CliError> {
-    let post_url = String::from(url) + "/state?address=" + prefix;
-    let hyper_uri = match post_url.parse::<hyper::Uri>() {
-        Ok(uri) => uri,
-        Err(e) => return Err(CliError::User(format!("Invalid URL: {}: {}", e, url))),
-    };
+    let url = Url::parse(&format!(
+        "{url}/state?address={prefix}",
+        url = url,
+        prefix = prefix
+    ))
+    .map_err(|e| CliError::User(format!("Invalid URL: {}: {}", e, url)))?;
 
-    match hyper_uri.scheme() {
-        Some(scheme) => {
-            if scheme != "http" {
-                return Err(CliError::User(format!(
-                    "Unsupported scheme ({}) in URL: {}",
-                    scheme, url
-                )));
-            }
-        }
-        None => {
-            return Err(CliError::User(format!("No scheme in URL: {}", url)));
+    match url.scheme() {
+        "http" => (),
+        "" => return Err(CliError::User(format!("No scheme in URL: {}", url))),
+        s => {
+            return Err(CliError::User(format!(
+                "Unsupported scheme ({}) in URL: {}",
+                s, url
+            )))
         }
     }
 
-    let mut core = tokio_core::reactor::Core::new()?;
-    let handle = core.handle();
-    let client = Client::configure().build(&handle);
-
-    let req = Request::new(Method::Get, hyper_uri);
-
-    let work = client.request(req).and_then(|res| {
-        res.body().concat2().and_then(move |chunks| {
-            future::ok(serde_json::from_slice::<JsonStateEntry>(&chunks).unwrap())
-        })
-    });
-
-    let response = core.run(work)?;
+    let response = reqwest::blocking::get(url)?.json::<JsonStateEntry>()?;
 
     Ok(response.data)
 }
@@ -69,4 +51,35 @@ struct JsonStateEntry {
 pub struct StateEntry {
     pub address: String,
     pub data: String,
+}
+
+#[cfg(test)]
+mod tests {
+
+    use mockito;
+
+    use super::*;
+
+    #[test]
+    // Asserts that URLs with a scheme other that http return an error
+    fn test_cli_get_state_with_prefix_scheme() {
+        assert!(get_state_with_prefix("https://test.com", "test").is_err());
+        assert!(get_state_with_prefix("file://test", "test").is_err());
+    }
+
+    #[test]
+    // Asserts that get_state_with_prefix() returns data as expected
+    fn test_cli_get_state_with_prefix() {
+        let url = mockito::server_url();
+        let _m1 = mockito::mock("GET", "/state?address=test")
+            .with_body("{\"data\":[{\"address\": \"abc\", \"data\": \"def\"}]}")
+            .create();
+        let expected = vec![StateEntry {
+            address: "abc".to_string(),
+            data: "def".to_string(),
+        }];
+        let result = get_state_with_prefix(&url, "test");
+
+        assert_eq!(result.unwrap(), expected);
+    }
 }
