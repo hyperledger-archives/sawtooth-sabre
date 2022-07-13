@@ -13,7 +13,7 @@ Hyperledger Sawtooth please see the
 ## Documentation
 
 Sawtooth Sabre documentation can be found here:
-https://sawtooth.hyperledger.org/docs/sabre/releases/latest/
+https://sawtooth.hyperledger.org/docs/1.2/sabre/
 
 ## License
 
