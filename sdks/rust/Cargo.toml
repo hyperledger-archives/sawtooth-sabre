@@ -21,7 +21,7 @@ description = """\
     Sawtooth Sabre is a transaction family which implements on-chain smart \
     contracts executed in a WebAssembly virtual machine.
 """
-documentation = "https://sawtooth.hyperledger.org/docs/sabre/releases/latest/"
+documentation = "https://sawtooth.hyperledger.org/docs/1.2/sabre/"
 edition = "2018"
 
 
