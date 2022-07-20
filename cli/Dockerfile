@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:bionic
+FROM ubuntu:jammy
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
- && apt-get install gnupg -y
-
-# Need sawtooth-sdk to create keys
-RUN echo "deb http://repo.sawtooth.me/ubuntu/nightly bionic universe" >> /etc/apt/sources.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 44FC67F19B2466EA \
- && apt-get update \
  && apt-get install -y -q \
  curl \
  gcc \
@@ -28,17 +24,21 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/nightly bionic universe" >> /etc/ap
  libssl-dev \
  libzmq3-dev \
  pkg-config \
- python3-sawtooth-sdk \
- python3-sawtooth-cli \
  unzip \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 # For Building Protobufs
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
- && curl -OLsS https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip \
- && unzip protoc-3.5.1-linux-x86_64.zip -d protoc3 \
- && rm protoc-3.5.1-linux-x86_64.zip
+ && TARGET_ARCH=$(dpkg --print-architecture) \
+ && if [[ $TARGET_ARCH == "arm64" ]]; then \
+      PROTOC_ARCH="aarch_64"; \
+    elif [[ $TARGET_ARCH == "amd64" ]]; then \
+      PROTOC_ARCH="x86_64"; \
+    fi \
+ && curl -OLsS https://github.com/google/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-$PROTOC_ARCH.zip \
+ && unzip -o protoc-3.20.0-linux-$PROTOC_ARCH.zip -d /usr/local \
+ && rm protoc-3.20.0-linux-$PROTOC_ARCH.zip
 
 WORKDIR /project/cli
 ENV PATH=$PATH:/protoc3/bin:/root/.cargo/bin:/project/cli/target/debug/  \

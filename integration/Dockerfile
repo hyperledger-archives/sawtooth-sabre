@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:bionic
+FROM ubuntu:jammy
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
- && apt-get install gnupg -y
-
-RUN echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/ci bionic universe" >> /etc/apt/sources.list \
- && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD \
- && apt-get update \
  && apt-get install -y -q \
     build-essential \
     git \
@@ -38,10 +35,16 @@ RUN curl https://sh.rustup.rs -sSf > /usr/bin/rustup-init \
  && rustup-init -y
 
  # For Building Protobufs
- RUN curl -OLsS https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip \
-  && unzip protoc-3.5.1-linux-x86_64.zip -d  /usr/local \
-  && rm protoc-3.5.1-linux-x86_64.zip
- RUN apt-get update && apt-get install -y protobuf-compiler
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
+ && TARGET_ARCH=$(dpkg --print-architecture) \
+ && if [[ $TARGET_ARCH == "arm64" ]]; then \
+      PROTOC_ARCH="aarch_64"; \
+    elif [[ $TARGET_ARCH == "amd64" ]]; then \
+      PROTOC_ARCH="x86_64"; \
+    fi \
+ && curl -OLsS https://github.com/google/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-$PROTOC_ARCH.zip \
+ && unzip -o protoc-3.20.0-linux-$PROTOC_ARCH.zip -d /usr/local \
+ && rm protoc-3.20.0-linux-$PROTOC_ARCH.zip
 
 ENV PATH=$PATH:/protoc3/bin:/root/.cargo/bin \
  CARGO_INCREMENTAL=0

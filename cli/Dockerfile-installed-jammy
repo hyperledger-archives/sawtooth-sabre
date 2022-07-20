@@ -12,16 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker build -f cli/Dockerfile-installed-xenial -t sawtooth-sabre-cli .
+# docker build -f cli/Dockerfile-installed-jammy -t sawtooth-sabre-cli .
 
 # -------------=== sabre cli build ===-------------
 
-FROM ubuntu:xenial as sabre-cli-builder
+FROM ubuntu:jammy as sabre-cli-builder
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV VERSION=AUTO_STRICT
 
 RUN apt-get update \
+  && apt-get install gnupg -y
+
+RUN apt-get update \
  && apt-get install -y \
+ build-essential \
  curl \
  gcc \
  git \
@@ -33,9 +39,15 @@ RUN apt-get update \
 
 # For Building Protobufs
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
- && curl -OLsS https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip \
- && unzip protoc-3.5.1-linux-x86_64.zip -d protoc3 \
- && rm protoc-3.5.1-linux-x86_64.zip
+ && TARGET_ARCH=$(dpkg --print-architecture) \
+ && if [[ $TARGET_ARCH == "arm64" ]]; then \
+      PROTOC_ARCH="aarch_64"; \
+    elif [[ $TARGET_ARCH == "amd64" ]]; then \
+      PROTOC_ARCH="x86_64"; \
+    fi \
+ && curl -OLsS https://github.com/google/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-$PROTOC_ARCH.zip \
+ && unzip -o protoc-3.20.0-linux-$PROTOC_ARCH.zip -d /usr/local \
+ && rm protoc-3.20.0-linux-$PROTOC_ARCH.zip
 
 ENV PATH=$PATH:/protoc3/bin  \
     CARGO_INCREMENTAL=0
@@ -46,16 +58,19 @@ COPY . /project
 WORKDIR /project/cli
 
 RUN export VERSION=$(../bin/get_version) \
- && sed -i -e s/version.*$/version\ =\ \"${VERSION}\"/ Cargo.toml \
+ && sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"$(../bin/get_version)\"/" Cargo.toml \
  && /root/.cargo/bin/cargo deb --deb-version $VERSION
 
 # -------------=== sabre cli docker build ===-------------
 
-FROM hyperledger/sawtooth-all:1.0
+FROM ubuntu:jammy
 
 COPY --from=sabre-cli-builder /project/cli/target/debian/sabre-cli*.deb /tmp
 
 RUN apt-get update \
+ && apt-get install -y -q --no-install-recommends \
+    ca-certificates \
+    curl \
  && dpkg --unpack /tmp/sabre-cli_*.deb \
  && apt-get -f -y install
 

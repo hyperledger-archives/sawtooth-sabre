@@ -12,16 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker build -f tp/Dockerfile-installed-xenial -t sawtooth-sabre-tp .
+# docker build -f tp/Dockerfile-installed-jammy -t sawtooth-sabre-tp .
 
 # -------------=== sabre tp build ===-------------
 
-FROM ubuntu:xenial as sabre-tp-builder
+FROM ubuntu:jammy as sabre-tp-builder
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV VERSION=AUTO_STRICT
 
 RUN apt-get update \
+  && apt-get install gnupg -y
+
+RUN apt-get update \
  && apt-get install -y \
+ build-essential \
  curl \
  gcc \
  git \
@@ -33,9 +39,15 @@ RUN apt-get update \
 
 # For Building Protobufs
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
- && curl -OLsS https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip \
- && unzip protoc-3.5.1-linux-x86_64.zip -d protoc3 \
- && rm protoc-3.5.1-linux-x86_64.zip
+ && TARGET_ARCH=$(dpkg --print-architecture) \
+ && if [[ $TARGET_ARCH == "arm64" ]]; then \
+      PROTOC_ARCH="aarch_64"; \
+    elif [[ $TARGET_ARCH == "amd64" ]]; then \
+      PROTOC_ARCH="x86_64"; \
+    fi \
+ && curl -OLsS https://github.com/google/protobuf/releases/download/v3.20.0/protoc-3.20.0-linux-$PROTOC_ARCH.zip \
+ && unzip -o protoc-3.20.0-linux-$PROTOC_ARCH.zip -d /usr/local \
+ && rm protoc-3.20.0-linux-$PROTOC_ARCH.zip
 
 ENV PATH=$PATH:/protoc3/bin  \
     CARGO_INCREMENTAL=0
@@ -46,12 +58,12 @@ COPY . /project
 WORKDIR /project/tp
 
 RUN export VERSION=$(../bin/get_version) \
- && sed -i -e s/version.*$/version\ =\ \"${VERSION}\"/ Cargo.toml \
+ && sed -i -e "0,/version.*$/ s/version.*$/version\ =\ \"${VERSION}\"/" Cargo.toml \
  && /root/.cargo/bin/cargo deb --deb-version $VERSION
 
 # -------------=== sabre tp build ===-------------
 
-FROM ubuntu:xenial
+FROM ubuntu:jammy
 
 COPY --from=sabre-tp-builder /project/tp/target/debian/sawtooth-sabre_*.deb /tmp
 
