@@ -105,13 +105,6 @@ pipeline {
             }
         }
 
-        stage ('Build Documentation') {
-            steps {
-                sh 'docker-compose -f docs/docker-compose.yaml up'
-                sh 'docker-compose -f docs/docker-compose.yaml down'
-            }
-        }
-
         stage('Build Archive Artifacts') {
             steps {
                 sh 'mkdir -p build/debs'
@@ -123,10 +116,9 @@ pipeline {
     post {
         always {
             sh 'docker-compose -f docker-compose.yaml -f integration/sabre_test.yaml down'
-            sh 'docker-compose -f docs/docker-compose.yaml down'
         }
         success {
-            archiveArtifacts artifacts: '*.tgz, *.zip, build/debs/*.deb, docs/build/html/**'
+            archiveArtifacts artifacts: '*.tgz, *.zip, build/debs/*.deb'
         }
         aborted {
             error "Aborted, exiting now"
