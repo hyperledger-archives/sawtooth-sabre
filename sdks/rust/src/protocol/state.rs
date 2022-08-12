@@ -23,7 +23,7 @@ use crate::protos::{
 };
 
 /// Native implementation for Version
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Version {
     version: String,
     contract_sha512: String,
@@ -149,7 +149,7 @@ impl VersionBuilder {
 }
 
 /// Native implementation for ContractRegistry
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ContractRegistry {
     name: String,
     versions: Vec<Version>,
@@ -317,7 +317,7 @@ impl ContractRegistryBuilder {
 }
 
 /// Native implementation for ContractRegistryList
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ContractRegistryList {
     registries: Vec<ContractRegistry>,
 }
@@ -441,7 +441,7 @@ impl ContractRegistryListBuilder {
 }
 
 /// Native implementation for Permission
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Permission {
     contract_name: String,
     read: bool,
@@ -563,7 +563,7 @@ impl PermissionBuilder {
 }
 
 /// Native implementation for NamespaceRegistry
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct NamespaceRegistry {
     namespace: String,
     owners: Vec<String>,
@@ -731,7 +731,7 @@ impl NamespaceRegistryBuilder {
 }
 
 // Native implementation for NamespaceRegistryList
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct NamespaceRegistryList {
     registries: Vec<NamespaceRegistry>,
 }
@@ -857,7 +857,7 @@ impl NamespaceRegistryListBuilder {
 }
 
 /// Native implementation for Contract
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Contract {
     name: String,
     version: String,
@@ -1079,7 +1079,7 @@ impl ContractBuilder {
 }
 
 // Native implementation for ContractList
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ContractList {
     contracts: Vec<Contract>,
 }
@@ -1191,7 +1191,7 @@ impl ContractListBuilder {
 }
 
 /// Native implementation for SmartPermission
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct SmartPermission {
     name: String,
     org_id: String,
@@ -1347,7 +1347,7 @@ impl SmartPermissionBuilder {
 }
 
 // Native implementation for SmartPermissionList
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct SmartPermissionList {
     smart_permissions: Vec<SmartPermission>,
 }
