@@ -33,7 +33,7 @@ use super::{
 };
 
 /// Native implementation for SabrePayload_Action
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Action {
     CreateContract(CreateContractAction),
     DeleteContract(DeleteContractAction),
@@ -156,7 +156,7 @@ impl std::fmt::Display for ActionBuildError {
 }
 
 /// Native implementation for CreateContractAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct CreateContractAction {
     name: String,
     version: String,
@@ -324,7 +324,7 @@ impl CreateContractActionBuilder {
 }
 
 /// Native implementation for DeleteContractAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct DeleteContractAction {
     name: String,
     version: String,
@@ -430,7 +430,7 @@ impl DeleteContractActionBuilder {
 }
 
 /// Native implementation for ExecuteContractAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ExecuteContractAction {
     name: String,
     version: String,
@@ -598,7 +598,7 @@ impl ExecuteContractActionBuilder {
 }
 
 /// Native implementation for CreateContractRegistryAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct CreateContractRegistryAction {
     name: String,
     owners: Vec<String>,
@@ -712,7 +712,7 @@ impl CreateContractRegistryActionBuilder {
 }
 
 /// Native implementation for DeleteContractRegistryAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct DeleteContractRegistryAction {
     name: String,
 }
@@ -801,7 +801,7 @@ impl DeleteContractRegistryActionBuilder {
 }
 
 /// Native implementation for UpdateContractRegistryOwnersAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct UpdateContractRegistryOwnersAction {
     name: String,
     owners: Vec<String>,
@@ -927,7 +927,7 @@ impl UpdateContractRegistryOwnersActionBuilder {
 }
 
 /// Native implementation for CreateNamespaceRegistryAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct CreateNamespaceRegistryAction {
     namespace: String,
     owners: Vec<String>,
@@ -1041,7 +1041,7 @@ impl CreateNamespaceRegistryActionBuilder {
 }
 
 /// Native implementation for DeleteNamespaceRegistryAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct DeleteNamespaceRegistryAction {
     namespace: String,
 }
@@ -1129,7 +1129,7 @@ impl DeleteNamespaceRegistryActionBuilder {
 }
 
 /// Native implementation for UpdateNamespaceRegistryOwnersAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct UpdateNamespaceRegistryOwnersAction {
     namespace: String,
     owners: Vec<String>,
@@ -1261,7 +1261,7 @@ impl UpdateNamespaceRegistryOwnersActionBuilder {
 }
 
 /// Native implementation for CreateNamespaceRegistryPermissionAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct CreateNamespaceRegistryPermissionAction {
     namespace: String,
     contract_name: String,
@@ -1425,7 +1425,7 @@ impl CreateNamespaceRegistryPermissionActionBuilder {
 }
 
 /// Native implementation for DeleteNamespaceRegistryPermissionAction
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct DeleteNamespaceRegistryPermissionAction {
     namespace: String,
     contract_name: String,
@@ -1558,7 +1558,7 @@ impl DeleteNamespaceRegistryPermissionActionBuilder {
 }
 
 /// Native implementation for SabrePayload
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SabrePayload {
     action: Action,
 }
