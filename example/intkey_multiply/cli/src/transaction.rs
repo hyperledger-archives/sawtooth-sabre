@@ -64,7 +64,7 @@ fn bytes_to_hex_str(b: &[u8]) -> String {
 fn compute_intkey_address(name: &str) -> String {
     let mut sha = Sha512::new();
     sha.input(name.as_bytes());
-    String::from(INTKEY_PREFIX) + &sha.result_str()[64..].to_string()
+    String::from(INTKEY_PREFIX) + &sha.result_str()[64..]
 }
 
 /// Returns a Transaction for the given Payload and Signer
