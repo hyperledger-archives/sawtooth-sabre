@@ -230,7 +230,7 @@ impl IntkeyPayload {
             .map_err(|err| ApplyError::InvalidTransaction(format!("{}", err)))?;
         let payload_vec = payload.split(',').collect::<Vec<&str>>();
 
-        let name_a_raw: String = match payload_vec.get(0) {
+        let name_a_raw: String = match payload_vec.first() {
             None => {
                 return Err(ApplyError::InvalidTransaction(String::from(
                     "Name A must be a string",
