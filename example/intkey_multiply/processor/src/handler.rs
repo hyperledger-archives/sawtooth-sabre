@@ -314,7 +314,7 @@ impl<'a> IntkeyState<'a> {
             .iter()
             .map(|b| format!("{:02x}", b))
             .collect::<String>();
-        get_intkey_prefix() + &sha[64..].to_string()
+        get_intkey_prefix() + &sha[64..]
     }
 
     pub fn get(&mut self, name: &str) -> Result<Option<u32>, ApplyError> {
