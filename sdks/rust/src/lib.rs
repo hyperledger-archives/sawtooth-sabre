@@ -632,7 +632,7 @@ unsafe fn ptr_to_vec(ptr: WasmPtr) -> Result<Option<Vec<u8>>, WasmSdkError> {
     Ok(Some(vec))
 }
 
-#[derive(PartialOrd, PartialEq, Copy, Clone)]
+#[derive(PartialOrd, PartialEq, Eq, Copy, Clone)]
 pub enum LogLevel {
     Trace,
     Debug,
