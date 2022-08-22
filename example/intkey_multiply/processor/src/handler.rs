@@ -230,7 +230,7 @@ impl IntkeyPayload {
             .map_err(|err| ApplyError::InvalidTransaction(format!("{}", err)))?;
         let payload_vec = payload.split(',').collect::<Vec<&str>>();
 
-        let name_a_raw: String = match payload_vec.get(0) {
+        let name_a_raw: String = match payload_vec.first() {
             None => {
                 return Err(ApplyError::InvalidTransaction(String::from(
                     "Name A must be a string",
@@ -312,7 +312,7 @@ impl<'a> IntkeyState<'a> {
     fn calculate_address(name: &str) -> String {
         let mut sha = Sha512::new();
         sha.input(name.as_bytes());
-        get_intkey_prefix() + &sha.result_str()[64..].to_string()
+        get_intkey_prefix() + &sha.result_str()[64..]
     }
 
     pub fn get(&mut self, name: &str) -> Result<Option<u32>, ApplyError> {
