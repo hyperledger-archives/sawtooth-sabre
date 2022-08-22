@@ -65,7 +65,7 @@ fn compute_intkey_address(name: &str) -> String {
         .iter()
         .map(|b| format!("{:02x}", b))
         .collect::<String>();
-    String::from(INTKEY_PREFIX) + &sha[64..].to_string()
+    String::from(INTKEY_PREFIX) + &sha[64..]
 }
 
 /// Returns a Transaction for the given Payload and Signer

@@ -74,25 +74,25 @@ pub fn wait_for_batch(url: &str, wait: u64) -> Result<StatusResponse, CliError> 
     Ok(response)
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 struct Link {
     link: String,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct BatchStatus {
     id: String,
     status: String,
     invalid_transactions: Vec<InvalidTransaction>,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct InvalidTransaction {
     id: String,
     message: String,
 }
 
-#[derive(Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq, Eq)]
 pub struct StatusResponse {
     data: Vec<BatchStatus>,
     link: String,
