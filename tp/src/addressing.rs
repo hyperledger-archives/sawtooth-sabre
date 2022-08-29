@@ -95,8 +95,8 @@ pub fn compute_smart_permission_address(org_id: &str, name: &str) -> String {
     sha_name.input(name.as_bytes());
 
     String::from(SMART_PERMISSION_PREFIX)
-        + &sha_org_id.result_str()[..6].to_string()
-        + &sha_name.result_str()[..58].to_string()
+        + &sha_org_id.result_str()[..6]
+        + &sha_name.result_str()[..58]
 }
 
 /// Returns a state address for a given agent name

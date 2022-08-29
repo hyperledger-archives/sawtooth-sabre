@@ -23,7 +23,7 @@ use crate::protos::{
 };
 
 /// Native implementation for KeyValueEntry
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct KeyValueEntry {
     key: String,
     value: String,
@@ -145,7 +145,7 @@ impl KeyValueEntryBuilder {
 }
 
 /// Native implementation of Agent
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Agent {
     org_id: String,
     public_key: String,
@@ -323,7 +323,7 @@ impl AgentBuilder {
 }
 
 /// Native implementation of AgentList
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AgentList {
     agents: Vec<Agent>,
 }
@@ -444,7 +444,7 @@ impl AgentListBuilder {
 }
 
 /// Native implementation for Organization
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Organization {
     org_id: String,
     name: String,
@@ -613,7 +613,7 @@ impl OrganizationBuilder {
 }
 
 /// Native implementation of OrganizationList
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OrganizationList {
     organizations: Vec<Organization>,
 }
