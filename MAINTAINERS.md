@@ -1,19 +1,19 @@
 ## Maintainers
 
 ### Active Maintainers
-| Name | GitHub | RocketChat |
-| --- | --- | --- |
-| Andi Gunderson | agunde406 | agunde |
-| Dan Middleton | dcmiddle | Dan |
-| James Mitchell | jsmitchell | jsmitchell |
-| Logan Seeley | ltseeley | ltseeley |
-| Peter Schwarz | peterschwarz | pschwarz |
-| Richard Berg | rberg2 | rberg2 |
-| Ryan Banks | RyanLassigBanks | RobinBanks |
-| Ryan Beck-Buysse | rbuysse | rbuysse |
-| Shawn Amundson | vaporos | amundson |
+| Name | GitHub | 
+| --- | --- |
+| Andi Gunderson | agunde406 |
+| Dan Middleton | dcmiddle |
+| James Mitchell | jsmitchell |
+| Logan Seeley | ltseeley |
+| Peter Schwarz | peterschwarz |
+| Richard Berg | rberg2 |
+| Ryan Banks | RyanLassigBanks |
+| Ryan Beck-Buysse | rbuysse |
+| Shawn Amundson | vaporos |
 
 ### Retired Maintainers
-| Name | GitHub | RocketChat |
-| --- | --- | --- |
-| Adam Ludvik | aludvik | adamludvik |
+| Name | GitHub |
+| --- | --- |
+| Adam Ludvik | aludvik |
