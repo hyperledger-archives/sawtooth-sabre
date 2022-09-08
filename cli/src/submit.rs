@@ -20,7 +20,8 @@ use reqwest::{
 };
 use std::fmt;
 
-use transact::{protocol::batch::Batch, protos::IntoBytes};
+use sawtooth::protos::IntoBytes;
+use sawtooth::transact::protocol::batch::Batch;
 
 use crate::error::CliError;
 
@@ -160,7 +161,7 @@ mod tests {
 
     use cylinder::{secp256k1::Secp256k1Context, Context};
     use mockito;
-    use transact::protocol::{
+    use sawtooth::transact::protocol::{
         batch::{Batch, BatchBuilder},
         transaction::{HashMethod, TransactionBuilder},
     };
