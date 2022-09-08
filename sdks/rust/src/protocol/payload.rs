@@ -15,7 +15,7 @@
 use protobuf::Message;
 use protobuf::RepeatedField;
 #[cfg(not(target_arch = "wasm32"))]
-use transact::protocol::transaction::{HashMethod, TransactionBuilder};
+use sawtooth::transact::protocol::transaction::{HashMethod, TransactionBuilder};
 
 use std::error::Error as StdError;
 
