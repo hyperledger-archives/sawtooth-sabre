@@ -17,9 +17,9 @@ use std::error::Error as StdError;
 
 use sabre_sdk::protocol::payload::{ActionBuildError, SabrePayloadBuildError};
 use sabre_sdk::protos::ProtoConversionError;
-use transact::{
-    protocol::{batch::BatchBuildError, transaction::TransactionBuildError},
+use sawtooth::{
     protos::ProtoConversionError as TransactProtoConversionError,
+    transact::protocol::{batch::BatchBuildError, transaction::TransactionBuildError},
 };
 
 #[derive(Debug)]

@@ -19,11 +19,11 @@ tokio-core = "0.1"
 users = "0.6"
 yaml-rust = "0.4"
 reqwest = {version = "0.11", features = ["blocking", "json"], default-features = false}
+sawtooth = "0.8"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
 sabre-sdk = {path = "../sdks/rust"}
-transact = "0.5"
 
 [build-dependencies]
 protoc-rust = "2"
@@ -47,4 +47,4 @@ experimental = [
 ]
 
 [patch.crates-io]
-transact = { git = "https://github.com/hyperledger/transact" }
+sawtooth = { git = "https://github.com/hyperledger/sawtooth-lib" }

@@ -20,11 +20,11 @@ use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
 use sawtooth_sdk::processor::handler::TransactionHandler;
 
-use transact::families::sabre::handler::SabreTransactionHandler;
-use transact::handler::ContextError;
-use transact::handler::TransactionHandler as TransactHandler;
-use transact::protocol::transaction::Transaction;
-use transact::protos::transaction::TransactionHeader;
+use sawtooth::families::sabre::handler::SabreTransactionHandler;
+use sawtooth::protos::transaction::TransactionHeader;
+use sawtooth::transact::handler::ContextError;
+use sawtooth::transact::handler::TransactionHandler as TransactHandler;
+use sawtooth::transact::protocol::transaction::Transaction;
 
 /// The namespace registry prefix for global state (00ec00)
 const NAMESPACE_REGISTRY_PREFIX: &str = "00ec00";
@@ -39,7 +39,7 @@ struct SabreContext<'a> {
     sawtooth_context: &'a dyn TransactionContext,
 }
 
-impl<'a> transact::handler::TransactionContext for SabreContext<'a> {
+impl<'a> sawtooth::transact::handler::TransactionContext for SabreContext<'a> {
     fn get_state_entry(&self, address: &str) -> Result<Option<Vec<u8>>, ContextError> {
         let results = self
             .sawtooth_context
@@ -162,10 +162,10 @@ impl TransactionHandler for SabreHandler {
             .apply(&txn_pair, &mut sabre_context)
         {
             Ok(()) => Ok(()),
-            Err(transact::handler::ApplyError::InvalidTransaction(msg)) => {
+            Err(sawtooth::transact::handler::ApplyError::InvalidTransaction(msg)) => {
                 Err(ApplyError::InvalidTransaction(msg))
             }
-            Err(transact::handler::ApplyError::InternalError(msg)) => {
+            Err(sawtooth::transact::handler::ApplyError::InternalError(msg)) => {
                 Err(ApplyError::InternalError(msg))
             }
         }
