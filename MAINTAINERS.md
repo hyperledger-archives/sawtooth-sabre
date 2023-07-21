@@ -6,7 +6,6 @@
 | Andi Gunderson | agunde406 |
 | Dan Middleton | dcmiddle |
 | James Mitchell | jsmitchell |
-| Logan Seeley | ltseeley |
 | Peter Schwarz | peterschwarz |
 | Richard Berg | rberg2 |
 | Ryan Banks | RyanLassigBanks |
@@ -17,3 +16,4 @@
 | Name | GitHub |
 | --- | --- |
 | Adam Ludvik | aludvik |
+| Logan Seeley | ltseeley |
