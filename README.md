@@ -1,21 +1,18 @@
+# Hyperledger Sawtooth
 
-![Hyperledger Sawtooth](images/sawtooth_logo_light_blue-small.png)
+This project has moved (see below).
 
-# Sawtooth Sabre
+Hyperledger Sawtooth was a project to provide an enterprise solution for
+building, deploying, and running distributed ledgers (also called blockchains).
 
-Sawtooth Sabre is a transaction family which implements on-chain smart contracts
-executed in a WebAssembly virtual machine. This distributed application runs on
-top of Hyperledger Sawtooth, an enterprise blockchain. To learn more about
-Hyperledger Sawtooth please see the
-[sawtooth-core repo](https://github.com/hyperledger/sawtooth-core) or its
-[published docs](https://sawtooth.hyperledger.org/docs/).
+# Project Status
 
-## Documentation
+This Hyperledger project, Hyperledger Sawtooth, has been archived and is no
+longer active within Hyperledger.
 
-Sawtooth Sabre documentation can be found here:
-https://sawtooth.hyperledger.org/docs/1.2/sabre/
+Sawtooth is now maintained by the Splinter community. For more information,
+visit: https://github.com/splintercommunity/sawtooth-core/
 
-## License
+# License
 
-Hyperledger Sawtooth software is licensed under the
-[Apache License Version 2.0](LICENSE) software license.
+Hyperledger Sawtooth software is licensed under the [Apache License Version 2.0](LICENSE) software license.
