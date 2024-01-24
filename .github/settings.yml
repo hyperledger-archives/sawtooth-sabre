@@ -20,6 +20,7 @@ repository:
   private: false
   has_issues: true
   has_projects: false
+  archived: true
   has_wiki: false
   has_downloads: false
   default_branch: main
