@@ -65,11 +65,11 @@ fn main() {
         if matches.is_present("admin_allow_all") {
             warn!("Starting Sabre transaction processor without admin key verifcation");
             SabreHandler::new(SabreTransactionHandler::new(Box::new(
-                admin::AllowAllAdminPermission::default(),
+                admin::AllowAllAdminPermission,
             )))
         } else {
             SabreHandler::new(SabreTransactionHandler::new(Box::new(
-                admin::SettingsAdminPermission::default(),
+                admin::SettingsAdminPermission,
             )))
         }
     };

@@ -34,7 +34,7 @@ pub fn do_multiply(
     let public_key = context.get_public_key(&private_key)?.as_hex();
     let factory = signing::CryptoFactory::new(&*context);
     let signer = factory.new_signer(&private_key);
-    let payload = vec![name_a, name_b, name_c].join(",");
+    let payload = [name_a, name_b, name_c].join(",");
     let txn_payload = payload.as_bytes();
 
     if output.is_empty() {
